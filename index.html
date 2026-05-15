@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Meowdown — a 1v1 voice fighter where your meow is the controller. An idea showcase by Stefan / Triardor DOO. Built in the open with Unity 6.">
-<meta name="author" content="Stefan Malinović / Triardor DOO">
+<meta name="description" content="Meowdown — a 1v1 voice fighter where your meow is the controller. An idea showcase by Triardor.">
+<meta name="author" content="Triardor">
 <meta property="og:title" content="MEOWDOWN — Your Mouth Is The Controller">
 <meta property="og:description" content="A 1v1 voice fighter for mobile and Steam. Meow. Hiss. Pounce. Yowl. An idea showcase, open to collaboration.">
 <meta property="og:type" content="website">
@@ -901,78 +901,6 @@ section {
   color: var(--ink);
   margin-top: 12px;
   line-height: 1.5;
-}
-
-/* =========================================
-   BUILDER / TEAM
-   ========================================= */
-.builder {
-  background: var(--bg);
-}
-
-.builder-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 48px;
-  align-items: start;
-}
-
-@media (max-width: 768px) {
-  .builder-grid { grid-template-columns: 1fr; gap: 32px; }
-}
-
-.builder-text p {
-  font-size: 17px;
-  line-height: 1.6;
-  margin-bottom: 20px;
-  color: var(--cream);
-  opacity: 0.9;
-}
-
-.builder-text p strong {
-  color: var(--amber);
-  font-weight: 700;
-}
-
-.builder-stack {
-  background: var(--bg-mid);
-  border: 3px solid var(--amber);
-  border-radius: 8px;
-  padding: 32px;
-  box-shadow: 6px 6px 0 var(--amber);
-}
-
-.builder-stack-title {
-  font-family: 'Archivo Black', sans-serif;
-  font-size: 14px;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  color: var(--amber);
-  margin-bottom: 16px;
-}
-
-.stack-list {
-  list-style: none;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 13px;
-  line-height: 2;
-}
-
-.stack-list li {
-  display: flex;
-  justify-content: space-between;
-  padding: 4px 0;
-  border-bottom: 1px dashed var(--cream);
-  opacity: 0.85;
-}
-
-.stack-list li span:first-child {
-  color: var(--cream);
-}
-
-.stack-list li span:last-child {
-  color: var(--amber);
-  font-weight: 700;
 }
 
 /* =========================================
@@ -2015,7 +1943,7 @@ nav { gap: 16px; }
       <div class="stat">
         <div class="stat-num" data-count-to="12" data-suffix="wk">0wk</div>
         <div class="stat-label">MVP sprint</div>
-        <p class="stat-desc">Android beta in 3 months. Unity 6 + Photon Fusion + Supabase. One builder, one window.</p>
+        <p class="stat-desc">Android beta in 3 months. Unity 6 + Photon Fusion + Supabase.</p>
       </div>
       <div class="stat">
         <div class="stat-num" data-count-to="8" data-suffix="">0</div>
@@ -2143,7 +2071,7 @@ nav { gap: 16px; }
       </div>
       <div class="fig-card">
         <div class="fig-tag">/ 02 / Music</div>
-        <p class="fig-q">Cat Noir Lounge jazz is the brief. AI-generated for MVP? Commissioned composer post-launch? Open to applicants.</p>
+        <p class="fig-q">Cat Noir Lounge jazz is the brief. Commissioned composer or open to applicants — sound direction is wide open.</p>
       </div>
       <div class="fig-card">
         <div class="fig-tag">/ 03 / Mascot</div>
@@ -2151,7 +2079,7 @@ nav { gap: 16px; }
       </div>
       <div class="fig-card">
         <div class="fig-tag">/ 04 / Announcer</div>
-        <p class="fig-q">Snarky British documentarian, decided. But — recorded human voice actor, ElevenLabs AI, or a cat-voiced narrator? I genuinely don't know.</p>
+        <p class="fig-q">Snarky British documentarian, decided. But — recorded human voice actor or a cat-voiced narrator? I genuinely don't know.</p>
       </div>
       <div class="fig-card">
         <div class="fig-tag">/ 05 / Name</div>
@@ -2160,44 +2088,6 @@ nav { gap: 16px; }
       <div class="fig-card">
         <div class="fig-tag">/ 06 / Soft-launch market</div>
         <p class="fig-q">Belgrade first feels right for the city-leaderboard hook. But does it work as well in Berlin? Mexico City? Manila? TBD.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============== BUILDER ============== -->
-<section class="builder">
-  <div class="container">
-    <div class="section-tag">The Builder</div>
-    <h2 class="section-title">Solo. <em>AI-assisted.</em> Built in the open.</h2>
-
-    <div class="builder-grid">
-      <div class="builder-text">
-        <p>
-          Meowdown is being built by <strong>Stefan / Triardor DOO</strong> in Belgrade — designer and founder behind ZOPMAX (Spektrum Control), Tappy, ČasPosla, and Vineforge. Advanced Unreal background, full-stack design discipline, multi-product shipping history.
-        </p>
-        <p>
-          Code runs through <strong>Claude Code</strong> with structured per-week briefs. Art runs through AI generation (Midjourney + SDXL) against a locked Art Bible. The whole production model is one builder + AI tools shipping at studio quality, on purpose.
-        </p>
-        <p>
-          <strong>Doors are open for:</strong> investor conversations, co-founder talks, animator collaboration, composer commissions, streamer/creator partnerships for soft-launch — or just a friendly hello.
-        </p>
-      </div>
-
-      <div class="builder-stack">
-        <div class="builder-stack-title">/ Production Stack /</div>
-        <ul class="stack-list">
-          <li><span>Platforms</span><span>iOS · Android · Steam</span></li>
-          <li><span>Engine</span><span>Unity 6 LTS</span></li>
-          <li><span>Multiplayer</span><span>Photon Fusion 2</span></li>
-          <li><span>Backend</span><span>Supabase</span></li>
-          <li><span>Audio ML</span><span>Unity Sentis</span></li>
-          <li><span>Analytics</span><span>Firebase</span></li>
-          <li><span>Code</span><span>Claude Code</span></li>
-          <li><span>Art</span><span>Midjourney / SDXL</span></li>
-          <li><span>Voice</span><span>ElevenLabs</span></li>
-          <li><span>Music</span><span>Suno / Custom</span></li>
-        </ul>
       </div>
     </div>
   </div>
@@ -2225,9 +2115,8 @@ nav { gap: 16px; }
 <footer>
   <div class="footer-logo">MEOWDOWN</div>
   <div class="footer-info">
-    A <a href="https://triardor.com" target="_blank" rel="noopener">Triardor DOO</a> idea · Belgrade, Serbia<br>
-    PIB 114771478 · MB 22068083 · © 2026<br>
-    Built in the open with Claude Code · Powered by cats
+    A <a href="https://triardor.com" target="_blank" rel="noopener">Triardor</a> idea<br>
+    © 2026 · Powered by cats
   </div>
 </footer>
 
@@ -2248,8 +2137,7 @@ nav { gap: 16px; }
   const revealSelectors = [
     'section .container > *',
     '.pillars', '.steps', '.moves-grid', '.voiceviz-grid',
-    '.versus', '.animals', '.stats', '.roster-grid', '.figuring-grid',
-    '.builder-grid'
+    '.versus', '.animals', '.stats', '.roster-grid', '.figuring-grid'
   ];
   document.querySelectorAll('section .container').forEach(c => c.classList.add('reveal'));
   document.querySelectorAll('.pillars, .steps, .moves-grid, .voiceviz-grid, .animals, .stats, .roster-grid, .figuring-grid')
