@@ -1,0 +1,2385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Meowdown — a 1v1 voice fighter where your meow is the controller. An idea showcase by Stefan / Triardor DOO. Built in the open with Unity 6.">
+<meta name="author" content="Stefan Malinović / Triardor DOO">
+<meta property="og:title" content="MEOWDOWN — Your Mouth Is The Controller">
+<meta property="og:description" content="A 1v1 voice fighter for mobile and Steam. Meow. Hiss. Pounce. Yowl. An idea showcase, open to collaboration.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://steppenvvolf.github.io/meowdown/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="MEOWDOWN — Your Mouth Is The Controller">
+<meta name="twitter:description" content="A 1v1 voice fighter where your meow is the controller. Idea showcase.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%231A1614'/%3E%3Ccircle cx='50' cy='52' r='32' fill='%23FF8C42' stroke='%230D0D0D' stroke-width='5'/%3E%3Cpath d='M30 26 L26 8 L46 22 Z' fill='%23FF8C42' stroke='%230D0D0D' stroke-width='4' stroke-linejoin='round'/%3E%3Cpath d='M70 26 L74 8 L54 22 Z' fill='%23FF8C42' stroke='%230D0D0D' stroke-width='4' stroke-linejoin='round'/%3E%3Cellipse cx='50' cy='62' rx='9' ry='12' fill='%230D0D0D'/%3E%3Cellipse cx='50' cy='64' rx='6' ry='8' fill='%23FF4D8D'/%3E%3Cpath d='M38 50 Q43 56 48 50' fill='none' stroke='%230D0D0D' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M52 50 Q57 56 62 50' fill='none' stroke='%230D0D0D' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
+<title>MEOWDOWN — Your Mouth Is The Controller</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Honk&family=Archivo+Black&family=Bowlby+One&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+/* =========================================
+   MEOWDOWN PITCH DECK
+   Aesthetic: Underground Cat Fight Club Zine
+   ========================================= */
+
+:root {
+  --bg: #1A1614;
+  --bg-mid: #3D2E26;
+  --bg-paper: #F4E8D0;
+  --ink: #0D0D0D;
+  --cream: #FFF6E5;
+  --amber: #FFB627;
+  --red: #E63946;
+  --cyan: #5DD8E8;
+  --green: #7AC74F;
+  --gold: #FFD60A;
+  --pink: #FF4D8D;
+  --orange: #FF6B35;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--cream);
+  overflow-x: hidden;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Paper grain texture overlay — applied globally */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' /%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.08 0' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' /%3E%3C/svg%3E");
+  opacity: 0.6;
+  mix-blend-mode: overlay;
+}
+
+/* Halftone dots — for paper sections */
+.halftone-bg {
+  background-image: radial-gradient(circle, var(--ink) 1.2px, transparent 1.3px);
+  background-size: 18px 18px;
+  background-position: 0 0, 9px 9px;
+}
+
+/* =========================================
+   NAV
+   ========================================= */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px clamp(20px, 4vw, 48px);
+  background: rgba(26, 22, 20, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 2px solid var(--ink);
+}
+
+.nav-logo {
+  font-family: 'Honk', sans-serif;
+  font-size: 28px;
+  color: var(--amber);
+  letter-spacing: 1px;
+  text-shadow: 2px 2px 0 var(--ink);
+}
+
+.nav-cta {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--ink);
+  background: var(--amber);
+  padding: 10px 18px;
+  border: 2px solid var(--ink);
+  border-radius: 4px;
+  text-decoration: none;
+  box-shadow: 3px 3px 0 var(--ink);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.nav-cta:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0 var(--ink);
+}
+
+/* =========================================
+   HERO
+   ========================================= */
+.hero {
+  min-height: 100vh;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 120px clamp(20px, 4vw, 60px) 80px;
+  background: var(--bg);
+  text-align: center;
+  z-index: 2;
+}
+
+/* Decorative background scribbles */
+.hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 12% 80%, rgba(255, 182, 39, 0.08) 0%, transparent 35%),
+    radial-gradient(circle at 88% 20%, rgba(230, 57, 70, 0.08) 0%, transparent 35%);
+  pointer-events: none;
+}
+
+.hero-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  letter-spacing: 4px;
+  color: var(--amber);
+  text-transform: uppercase;
+  margin-bottom: 24px;
+  padding: 6px 16px;
+  border: 1.5px solid var(--amber);
+  border-radius: 100px;
+  background: rgba(255, 182, 39, 0.05);
+  position: relative;
+  z-index: 3;
+}
+
+.wordmark {
+  font-family: 'Honk', sans-serif;
+  font-size: clamp(80px, 18vw, 280px);
+  line-height: 0.85;
+  color: var(--cream);
+  letter-spacing: -0.02em;
+  text-shadow:
+    6px 6px 0 var(--red),
+    12px 12px 0 var(--ink);
+  position: relative;
+  z-index: 3;
+  margin: 8px 0;
+  font-feature-settings: "MORF" 30;
+}
+
+.tagline {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: clamp(20px, 3.5vw, 36px);
+  color: var(--amber);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  max-width: 900px;
+  margin: 32px auto 16px;
+  position: relative;
+  z-index: 3;
+  text-wrap: balance;
+}
+
+.tagline em {
+  font-style: normal;
+  color: var(--red);
+  position: relative;
+  display: inline-block;
+}
+
+.tagline em::after {
+  content: '';
+  position: absolute;
+  left: -4px; right: -4px;
+  bottom: 4px;
+  height: 6px;
+  background: var(--gold);
+  z-index: -1;
+  opacity: 0.6;
+}
+
+.subtagline {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  letter-spacing: 2px;
+  color: var(--cream);
+  opacity: 0.7;
+  text-transform: uppercase;
+  margin-bottom: 40px;
+  position: relative;
+  z-index: 3;
+}
+
+.hero-ctas {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+  position: relative;
+  z-index: 3;
+}
+
+.btn-primary, .btn-secondary {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  padding: 16px 32px;
+  border: 3px solid var(--ink);
+  border-radius: 4px;
+  text-decoration: none;
+  transition: transform 0.15s, box-shadow 0.15s;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.btn-primary {
+  background: var(--amber);
+  color: var(--ink);
+  box-shadow: 5px 5px 0 var(--ink);
+}
+
+.btn-primary:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: 8px 8px 0 var(--ink);
+}
+
+.btn-secondary {
+  background: var(--bg);
+  color: var(--cream);
+  border-color: var(--cream);
+  box-shadow: 5px 5px 0 var(--red);
+}
+
+.btn-secondary:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: 8px 8px 0 var(--red);
+}
+
+/* Hero cat illustration */
+.hero-cat-wrap {
+  margin-top: 60px;
+  position: relative;
+  width: clamp(260px, 40vw, 420px);
+  z-index: 3;
+}
+
+.hero-cat {
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(8px 8px 0 var(--ink));
+  animation: catBreathe 2.8s ease-in-out infinite;
+}
+
+@keyframes catBreathe {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-8px) scale(1.02); }
+}
+
+.cat-mouth-anim {
+  transform-origin: 200px 200px;
+  animation: yowlMouth 1.8s ease-in-out infinite;
+}
+
+@keyframes yowlMouth {
+  0%, 100% { transform: scaleY(0.7); }
+  50% { transform: scaleY(1.15); }
+}
+
+.sound-wave {
+  fill: none;
+  stroke: var(--gold);
+  stroke-width: 4;
+  stroke-linecap: round;
+  opacity: 0;
+  animation: soundPulse 1.8s ease-out infinite;
+}
+
+.sound-wave:nth-child(2) { animation-delay: 0.3s; }
+.sound-wave:nth-child(3) { animation-delay: 0.6s; }
+
+@keyframes soundPulse {
+  0% { opacity: 0; transform: translateX(0); }
+  20% { opacity: 1; }
+  100% { opacity: 0; transform: translateX(40px); }
+}
+
+/* "POW" floating decorations */
+.float-pop {
+  position: absolute;
+  font-family: 'Honk', sans-serif;
+  font-size: clamp(40px, 6vw, 72px);
+  color: var(--gold);
+  text-shadow: 4px 4px 0 var(--ink);
+  pointer-events: none;
+  z-index: 4;
+  animation: floatBob 4s ease-in-out infinite;
+}
+
+.float-pop.left { top: 30%; left: 5%; transform: rotate(-15deg); }
+.float-pop.right { top: 45%; right: 6%; transform: rotate(12deg); color: var(--red); animation-delay: 1s; }
+.float-pop.btm { bottom: 25%; left: 12%; transform: rotate(-8deg); color: var(--cyan); font-size: clamp(28px, 4vw, 48px); animation-delay: 2s; }
+
+@keyframes floatBob {
+  0%, 100% { transform: translateY(0) rotate(var(--r, -15deg)); }
+  50% { transform: translateY(-12px) rotate(var(--r, -15deg)); }
+}
+
+/* =========================================
+   MARQUEE
+   ========================================= */
+.marquee {
+  background: var(--amber);
+  color: var(--ink);
+  border-top: 4px solid var(--ink);
+  border-bottom: 4px solid var(--ink);
+  padding: 18px 0;
+  overflow: hidden;
+  position: relative;
+  z-index: 5;
+  transform: rotate(-2deg) translateX(-2%);
+  width: 104%;
+  margin-left: -2%;
+}
+
+.marquee-track {
+  display: flex;
+  gap: 60px;
+  white-space: nowrap;
+  animation: scroll 25s linear infinite;
+  font-family: 'Honk', sans-serif;
+  font-size: clamp(28px, 4vw, 48px);
+  letter-spacing: 2px;
+}
+
+.marquee-track span {
+  display: inline-block;
+}
+
+.marquee-track .star {
+  color: var(--red);
+}
+
+@keyframes scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.marquee-reverse {
+  background: var(--ink);
+  color: var(--cream);
+  transform: rotate(1.5deg) translateX(-2%);
+  margin-top: -20px;
+  border-top: none;
+  border-bottom: 4px solid var(--ink);
+}
+
+.marquee-reverse .marquee-track {
+  animation: scrollReverse 28s linear infinite;
+}
+
+.marquee-reverse .marquee-track .star { color: var(--amber); }
+
+@keyframes scrollReverse {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}
+
+/* =========================================
+   SECTION CONTAINER
+   ========================================= */
+section {
+  padding: clamp(80px, 12vw, 140px) clamp(20px, 5vw, 60px);
+  position: relative;
+  z-index: 2;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.section-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.section-tag::before {
+  content: '';
+  width: 28px;
+  height: 2px;
+  background: var(--amber);
+}
+
+.section-title {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: clamp(40px, 7vw, 88px);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  margin-bottom: 48px;
+  text-wrap: balance;
+}
+
+.section-title em {
+  font-style: normal;
+  color: var(--amber);
+  position: relative;
+}
+
+.section-title em::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 8px;
+  background: var(--red);
+  z-index: -1;
+  opacity: 0.6;
+}
+
+/* =========================================
+   PITCH SECTION
+   ========================================= */
+.pitch {
+  background: var(--bg);
+  border-top: 4px solid var(--ink);
+}
+
+.pitch-lede {
+  font-family: 'DM Sans', sans-serif;
+  font-size: clamp(20px, 2.4vw, 30px);
+  line-height: 1.4;
+  color: var(--cream);
+  max-width: 880px;
+  margin-bottom: 64px;
+  font-weight: 500;
+  text-wrap: balance;
+}
+
+.pitch-lede strong {
+  color: var(--amber);
+  font-weight: 700;
+  background: linear-gradient(transparent 65%, rgba(255, 182, 39, 0.25) 65%);
+  padding: 0 4px;
+}
+
+.pillars {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.pillar {
+  background: var(--bg-mid);
+  border: 3px solid var(--cream);
+  border-radius: 6px;
+  padding: 32px 24px;
+  box-shadow: 6px 6px 0 var(--amber);
+  position: relative;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.pillar:nth-child(1) { transform: rotate(-1.5deg); }
+.pillar:nth-child(2) { transform: rotate(0.8deg); }
+.pillar:nth-child(3) { transform: rotate(-0.6deg); box-shadow: 6px 6px 0 var(--red); }
+.pillar:nth-child(4) { transform: rotate(1.2deg); box-shadow: 6px 6px 0 var(--cyan); }
+
+.pillar:hover {
+  transform: rotate(0) translateY(-6px);
+  box-shadow: 10px 10px 0 var(--amber);
+}
+
+.pillar:nth-child(3):hover { box-shadow: 10px 10px 0 var(--red); }
+.pillar:nth-child(4):hover { box-shadow: 10px 10px 0 var(--cyan); }
+
+.pillar-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--amber);
+  letter-spacing: 2px;
+  margin-bottom: 12px;
+}
+
+.pillar-title {
+  font-family: 'Honk', sans-serif;
+  font-size: 44px;
+  color: var(--cream);
+  line-height: 1;
+  margin-bottom: 12px;
+}
+
+.pillar-desc {
+  font-size: 14px;
+  color: var(--cream);
+  opacity: 0.8;
+  line-height: 1.5;
+}
+
+/* =========================================
+   THE LOOP — 3 STEPS
+   ========================================= */
+.loop {
+  background: var(--bg-paper);
+  color: var(--ink);
+  border-top: 4px solid var(--ink);
+  border-bottom: 4px solid var(--ink);
+  position: relative;
+}
+
+.loop::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, var(--ink) 1px, transparent 1.5px);
+  background-size: 20px 20px;
+  opacity: 0.07;
+  pointer-events: none;
+}
+
+.loop .section-title { color: var(--ink); }
+.loop .section-tag { color: var(--red); }
+.loop .section-tag::before { background: var(--red); }
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 32px;
+  position: relative;
+  z-index: 2;
+}
+
+.step {
+  background: var(--cream);
+  border: 4px solid var(--ink);
+  border-radius: 8px;
+  padding: 40px 28px;
+  box-shadow: 8px 8px 0 var(--red);
+  text-align: center;
+  position: relative;
+}
+
+.step:nth-child(1) { transform: rotate(-1.2deg); box-shadow: 8px 8px 0 var(--amber); }
+.step:nth-child(2) { transform: rotate(0.8deg); }
+.step:nth-child(3) { transform: rotate(-0.5deg); box-shadow: 8px 8px 0 var(--cyan); }
+.step:nth-child(4) { transform: rotate(1.1deg); box-shadow: 8px 8px 0 var(--green); }
+
+.step-num {
+  font-family: 'Honk', sans-serif;
+  font-size: 96px;
+  line-height: 1;
+  color: var(--red);
+  text-shadow: 4px 4px 0 var(--ink);
+}
+
+.step:nth-child(1) .step-num { color: var(--amber); }
+.step:nth-child(3) .step-num { color: var(--cyan); }
+.step:nth-child(4) .step-num { color: var(--green); }
+
+.step-title {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 28px;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin: 12px 0 8px;
+  letter-spacing: 0.02em;
+}
+
+.step-desc {
+  font-size: 15px;
+  color: var(--ink);
+  opacity: 0.75;
+}
+
+/* =========================================
+   MOVES GRID
+   ========================================= */
+.moves {
+  background: var(--bg);
+}
+
+.moves-intro {
+  font-size: clamp(18px, 2vw, 22px);
+  color: var(--cream);
+  opacity: 0.85;
+  max-width: 720px;
+  margin-bottom: 48px;
+}
+
+.moves-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.move-card {
+  background: var(--bg-mid);
+  border: 3px solid var(--cream);
+  border-radius: 6px;
+  padding: 24px;
+  transition: transform 0.2s, border-color 0.2s;
+  position: relative;
+}
+
+.move-card:hover {
+  transform: translateY(-4px);
+}
+
+.move-card[data-color="red"] { border-color: var(--red); }
+.move-card[data-color="cyan"] { border-color: var(--cyan); }
+.move-card[data-color="yellow"] { border-color: var(--gold); }
+.move-card[data-color="green"] { border-color: var(--green); }
+.move-card[data-color="orange"] { border-color: var(--orange); }
+.move-card[data-color="pink"] { border-color: var(--pink); }
+.move-card[data-color="white"] { border-color: var(--cream); }
+
+.move-icon {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 16px;
+}
+
+.move-name {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 20px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  letter-spacing: 0.02em;
+}
+
+.move-input {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--amber);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.move-desc {
+  font-size: 13px;
+  opacity: 0.75;
+  line-height: 1.5;
+}
+
+/* =========================================
+   MARKET / OPENING
+   ========================================= */
+.market {
+  background: var(--bg-paper);
+  color: var(--ink);
+  border-top: 4px solid var(--ink);
+}
+
+.market .section-title { color: var(--ink); }
+.market .section-title em { color: var(--red); }
+.market .section-title em::after { background: var(--amber); }
+.market .section-tag { color: var(--red); }
+.market .section-tag::before { background: var(--red); }
+
+.market-intro {
+  font-size: clamp(18px, 2.2vw, 26px);
+  line-height: 1.4;
+  color: var(--ink);
+  max-width: 880px;
+  margin-bottom: 60px;
+  font-weight: 500;
+}
+
+.market-intro strong {
+  color: var(--red);
+  font-weight: 700;
+}
+
+.versus {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 24px;
+  align-items: stretch;
+  margin-top: 40px;
+}
+
+.versus-card {
+  background: var(--cream);
+  border: 4px solid var(--ink);
+  border-radius: 8px;
+  padding: 36px 28px;
+  box-shadow: 6px 6px 0 var(--ink);
+}
+
+.versus-card.them { background: var(--bg); color: var(--cream); }
+.versus-card.us { background: var(--amber); }
+
+.versus-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  opacity: 0.6;
+  margin-bottom: 8px;
+}
+
+.versus-title {
+  font-family: 'Honk', sans-serif;
+  font-size: 44px;
+  line-height: 1;
+  margin-bottom: 20px;
+  color: var(--ink);
+}
+
+.versus-card.them .versus-title { color: var(--cream); }
+
+.versus-list {
+  list-style: none;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.versus-list li {
+  padding: 6px 0;
+  border-bottom: 1px dashed currentColor;
+  opacity: 0.85;
+}
+
+.versus-list li:last-child { border-bottom: none; }
+
+.versus-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Honk', sans-serif;
+  font-size: 72px;
+  color: var(--red);
+  text-shadow: 3px 3px 0 var(--ink);
+}
+
+@media (max-width: 768px) {
+  .versus { grid-template-columns: 1fr; }
+  .versus-divider { padding: 20px 0; font-size: 56px; }
+}
+
+/* =========================================
+   EXPANSION
+   ========================================= */
+.expansion {
+  background: var(--bg);
+}
+
+.animals {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 20px;
+  margin-top: 48px;
+}
+
+.animal {
+  background: var(--bg-mid);
+  border: 3px solid var(--cream);
+  border-radius: 8px;
+  padding: 32px 20px;
+  text-align: center;
+  position: relative;
+  transition: transform 0.2s;
+}
+
+.animal.locked {
+  opacity: 0.55;
+  border-style: dashed;
+}
+
+.animal:hover { transform: translateY(-4px); }
+
+.animal-emoji {
+  font-size: 64px;
+  line-height: 1;
+  margin-bottom: 12px;
+  display: block;
+}
+
+.animal-name {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 18px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.animal-year {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--amber);
+  text-transform: uppercase;
+}
+
+.animal.locked .animal-year { color: var(--cream); opacity: 0.6; }
+
+.animal-badge {
+  position: absolute;
+  top: -12px;
+  right: -12px;
+  background: var(--red);
+  color: var(--cream);
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 10px;
+  padding: 6px 10px;
+  border: 2px solid var(--ink);
+  border-radius: 100px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 2px 2px 0 var(--ink);
+  transform: rotate(8deg);
+}
+
+/* =========================================
+   NUMBERS
+   ========================================= */
+.numbers {
+  background: var(--amber);
+  color: var(--ink);
+  border-top: 4px solid var(--ink);
+  border-bottom: 4px solid var(--ink);
+}
+
+.numbers .section-title { color: var(--ink); }
+.numbers .section-title em { color: var(--cream); background: var(--ink); padding: 0 8px; }
+.numbers .section-title em::after { display: none; }
+.numbers .section-tag { color: var(--ink); }
+.numbers .section-tag::before { background: var(--ink); }
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 24px;
+  margin-top: 32px;
+}
+
+.stat {
+  background: var(--cream);
+  border: 3px solid var(--ink);
+  border-radius: 8px;
+  padding: 32px 24px;
+  box-shadow: 5px 5px 0 var(--ink);
+  position: relative;
+}
+
+.stat:nth-child(odd) { transform: rotate(-1deg); }
+.stat:nth-child(even) { transform: rotate(0.8deg); }
+
+.stat-num {
+  font-family: 'Bowlby One', sans-serif;
+  font-size: clamp(48px, 6vw, 76px);
+  line-height: 0.9;
+  color: var(--red);
+  letter-spacing: -0.02em;
+}
+
+.stat-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--ink);
+  opacity: 0.7;
+  margin-top: 8px;
+}
+
+.stat-desc {
+  font-size: 13px;
+  color: var(--ink);
+  margin-top: 12px;
+  line-height: 1.5;
+}
+
+/* =========================================
+   BUILDER / TEAM
+   ========================================= */
+.builder {
+  background: var(--bg);
+}
+
+.builder-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: start;
+}
+
+@media (max-width: 768px) {
+  .builder-grid { grid-template-columns: 1fr; gap: 32px; }
+}
+
+.builder-text p {
+  font-size: 17px;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  color: var(--cream);
+  opacity: 0.9;
+}
+
+.builder-text p strong {
+  color: var(--amber);
+  font-weight: 700;
+}
+
+.builder-stack {
+  background: var(--bg-mid);
+  border: 3px solid var(--amber);
+  border-radius: 8px;
+  padding: 32px;
+  box-shadow: 6px 6px 0 var(--amber);
+}
+
+.builder-stack-title {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--amber);
+  margin-bottom: 16px;
+}
+
+.stack-list {
+  list-style: none;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  line-height: 2;
+}
+
+.stack-list li {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 0;
+  border-bottom: 1px dashed var(--cream);
+  opacity: 0.85;
+}
+
+.stack-list li span:first-child {
+  color: var(--cream);
+}
+
+.stack-list li span:last-child {
+  color: var(--amber);
+  font-weight: 700;
+}
+
+/* =========================================
+   CTA
+   ========================================= */
+.cta-section {
+  background: var(--red);
+  color: var(--cream);
+  text-align: center;
+  border-top: 4px solid var(--ink);
+}
+
+.cta-section .section-title {
+  color: var(--cream);
+  font-size: clamp(60px, 12vw, 160px);
+}
+
+.cta-section .section-title em {
+  color: var(--gold);
+}
+
+.cta-section .section-title em::after {
+  background: var(--ink);
+  height: 12px;
+}
+
+.cta-blurb {
+  font-size: clamp(18px, 2.5vw, 26px);
+  max-width: 720px;
+  margin: 0 auto 48px;
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+.cta-buttons {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.cta-section .btn-primary {
+  background: var(--gold);
+  border-color: var(--ink);
+  box-shadow: 6px 6px 0 var(--ink);
+  font-size: 16px;
+  padding: 20px 40px;
+}
+
+.cta-section .btn-primary:hover {
+  transform: translate(-4px, -4px);
+  box-shadow: 10px 10px 0 var(--ink);
+}
+
+.cta-section .btn-secondary {
+  background: var(--ink);
+  color: var(--cream);
+  border-color: var(--cream);
+  box-shadow: 6px 6px 0 var(--ink);
+  font-size: 16px;
+  padding: 20px 40px;
+}
+
+.cta-section .btn-secondary:hover {
+  transform: translate(-4px, -4px);
+  box-shadow: 10px 10px 0 var(--gold);
+}
+
+/* =========================================
+   FOOTER
+   ========================================= */
+footer {
+  background: var(--ink);
+  color: var(--cream);
+  padding: 48px clamp(20px, 5vw, 60px);
+  text-align: center;
+  border-top: 4px solid var(--cream);
+}
+
+.footer-logo {
+  font-family: 'Honk', sans-serif;
+  font-size: 36px;
+  color: var(--amber);
+  margin-bottom: 12px;
+}
+
+.footer-info {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  opacity: 0.6;
+  text-transform: uppercase;
+  line-height: 2;
+}
+
+.footer-info a {
+  color: var(--cream);
+  text-decoration: underline;
+}
+
+.footer-info a:hover { color: var(--amber); }
+
+/* =========================================
+   RESPONSIVE TWEAKS
+   ========================================= */
+@media (max-width: 640px) {
+  .hero { padding-top: 100px; }
+  .wordmark { font-size: 22vw; text-shadow: 4px 4px 0 var(--red), 8px 8px 0 var(--ink); }
+  .float-pop.left, .float-pop.right { display: none; }
+}
+
+/* =========================================
+   NAV META (showcase line)
+   ========================================= */
+.nav-meta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2.5px;
+  color: var(--cream);
+  opacity: 0.5;
+  text-transform: uppercase;
+  flex: 1;
+  text-align: center;
+}
+@media (max-width: 720px) { .nav-meta { display: none; } }
+
+/* =========================================
+   BUTTON — TERTIARY (showcase tone)
+   ========================================= */
+.btn-tertiary {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  padding: 16px 28px;
+  color: var(--cream);
+  background: transparent;
+  border: 2px dashed var(--cream);
+  border-radius: 4px;
+  text-decoration: none;
+  transition: transform 0.15s, background 0.15s;
+  display: inline-block;
+}
+.btn-tertiary:hover {
+  background: rgba(255, 246, 229, 0.08);
+  transform: translateY(-2px);
+}
+
+/* =========================================
+   VOICE VISUALIZER
+   ========================================= */
+.voiceviz {
+  background: var(--bg-mid);
+  border-top: 4px solid var(--ink);
+}
+.voiceviz .section-tag { color: var(--cyan); }
+.voiceviz .section-tag::before { background: var(--cyan); }
+.voiceviz .section-title em { color: var(--cyan); }
+.voiceviz .section-title em::after { background: var(--ink); }
+
+.voiceviz-intro {
+  font-size: clamp(17px, 1.8vw, 21px);
+  line-height: 1.5;
+  color: var(--cream);
+  opacity: 0.88;
+  max-width: 760px;
+  margin-bottom: 48px;
+  font-weight: 500;
+}
+.voiceviz-intro strong {
+  color: var(--cyan);
+  font-weight: 700;
+}
+.voiceviz-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 18px;
+}
+.vviz-card {
+  background: rgba(13, 13, 13, 0.55);
+  border: 2px solid rgba(255, 246, 229, 0.18);
+  border-radius: 8px;
+  padding: 22px 20px 18px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  transition: border-color 0.25s, transform 0.2s;
+}
+.vviz-card:hover {
+  border-color: var(--cyan);
+  transform: translateY(-4px);
+}
+.vviz-card.vviz-ult {
+  border-color: rgba(255, 214, 10, 0.4);
+  background: rgba(255, 214, 10, 0.04);
+}
+.vviz-card.vviz-ult:hover { border-color: var(--gold); }
+.vviz-wave {
+  width: 100%;
+  height: 60px;
+  display: block;
+}
+.vviz-card:hover .vviz-wave path {
+  animation: wavedraw 1.2s ease-out;
+}
+@keyframes wavedraw {
+  0% { stroke-dasharray: 600; stroke-dashoffset: 600; }
+  100% { stroke-dasharray: 600; stroke-dashoffset: 0; }
+}
+.vviz-input {
+  font-family: 'Honk', sans-serif;
+  font-size: 26px;
+  color: var(--cream);
+  letter-spacing: 1px;
+  margin-top: 4px;
+}
+.vviz-arrow {
+  font-family: 'Honk', sans-serif;
+  font-size: 22px;
+  color: var(--amber);
+  opacity: 0.6;
+  line-height: 1;
+}
+.vviz-move {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 18px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.voiceviz-note {
+  font-size: clamp(16px, 1.6vw, 19px);
+  color: var(--cream);
+  opacity: 0.7;
+  max-width: 760px;
+  margin-top: 36px;
+  line-height: 1.55;
+  font-style: italic;
+}
+.voiceviz-note em {
+  color: var(--amber);
+  font-style: normal;
+}
+
+/* =========================================
+   ROSTER STRIP
+   ========================================= */
+.roster {
+  background: var(--bg-paper);
+  color: var(--ink);
+  border-top: 4px solid var(--ink);
+}
+.roster .section-title { color: var(--ink); }
+.roster .section-title em { color: var(--red); }
+.roster .section-title em::after { background: var(--amber); }
+.roster .section-tag { color: var(--red); }
+.roster .section-tag::before { background: var(--red); }
+
+.roster-intro {
+  font-size: clamp(17px, 1.8vw, 21px);
+  line-height: 1.5;
+  color: var(--ink);
+  opacity: 0.85;
+  max-width: 760px;
+  margin-bottom: 48px;
+  font-weight: 500;
+}
+.roster-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 18px;
+}
+.roster-cat {
+  background: var(--cream);
+  border: 3px solid var(--ink);
+  border-radius: 10px;
+  padding: 20px 16px 22px;
+  text-align: center;
+  cursor: default;
+  transition: transform 0.25s, box-shadow 0.25s;
+  position: relative;
+  overflow: hidden;
+}
+.roster-cat:nth-child(1) { transform: rotate(-1.4deg); box-shadow: 6px 6px 0 var(--orange); color: #FF8C42; }
+.roster-cat:nth-child(2) { transform: rotate(0.9deg); box-shadow: 6px 6px 0 var(--amber); color: #FFE5C2; }
+.roster-cat:nth-child(3) { transform: rotate(-0.7deg); box-shadow: 6px 6px 0 var(--pink); color: #E8B8B0; }
+.roster-cat:nth-child(4) { transform: rotate(1.1deg); box-shadow: 6px 6px 0 var(--ink); color: #1A1614; }
+.roster-cat:nth-child(5) { transform: rotate(-1deg); box-shadow: 6px 6px 0 var(--red); color: #8B5A2B; }
+.roster-cat:hover {
+  transform: rotate(0) translateY(-8px) scale(1.04);
+  box-shadow: 12px 12px 0 var(--ink);
+  z-index: 5;
+}
+.roster-silhouette {
+  width: 92px;
+  height: 92px;
+  display: block;
+  margin: 0 auto 10px;
+  filter: drop-shadow(3px 3px 0 rgba(0,0,0,0.2));
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.roster-cat:hover .roster-silhouette {
+  transform: scale(1.08) rotate(-3deg);
+}
+.roster-name {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 15px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  margin-top: 8px;
+}
+.roster-vibe {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  line-height: 1.5;
+  color: var(--ink);
+  opacity: 0.65;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, opacity 0.25s ease 0.05s, margin-top 0.3s ease;
+}
+.roster-cat:hover .roster-vibe {
+  max-height: 80px;
+  opacity: 0.85;
+  margin-top: 10px;
+}
+.roster-foot {
+  font-size: clamp(15px, 1.6vw, 18px);
+  color: var(--ink);
+  opacity: 0.7;
+  max-width: 760px;
+  margin-top: 40px;
+  line-height: 1.55;
+}
+.roster-foot em {
+  color: var(--red);
+  font-style: normal;
+  font-weight: 700;
+}
+
+/* =========================================
+   STILL FIGURING OUT
+   ========================================= */
+.figuring {
+  background: var(--bg);
+  border-top: 4px solid var(--ink);
+}
+.figuring .section-tag { color: var(--pink); }
+.figuring .section-tag::before { background: var(--pink); }
+.figuring .section-title em { color: var(--pink); }
+.figuring .section-title em::after { background: var(--red); }
+
+.figuring-intro {
+  font-size: clamp(17px, 1.8vw, 21px);
+  line-height: 1.5;
+  color: var(--cream);
+  opacity: 0.85;
+  max-width: 760px;
+  margin-bottom: 48px;
+  font-weight: 500;
+}
+.figuring-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 18px;
+}
+.fig-card {
+  background: var(--bg-mid);
+  border: 2px dashed rgba(255, 77, 141, 0.45);
+  border-radius: 8px;
+  padding: 28px 24px;
+  position: relative;
+  transition: border-color 0.25s, transform 0.25s;
+}
+.fig-card:hover {
+  border-color: var(--pink);
+  border-style: solid;
+  transform: translateY(-4px);
+}
+.fig-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--pink);
+  margin-bottom: 14px;
+}
+.fig-q {
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--cream);
+  opacity: 0.88;
+}
+.fig-q em {
+  color: var(--amber);
+  font-style: italic;
+  font-weight: 500;
+}
+
+/* =========================================
+   VERSUS — PULSING MATCHMAKING DIVIDER
+   ========================================= */
+.versus-divider {
+  position: relative;
+  animation: dividerPulse 2.4s ease-in-out infinite;
+}
+@keyframes dividerPulse {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 0 transparent); }
+  50% { transform: scale(1.08); filter: drop-shadow(0 0 18px rgba(230, 57, 70, 0.5)); }
+}
+.versus-card {
+  position: relative;
+  overflow: hidden;
+}
+.versus-card::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, currentColor, transparent);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s;
+}
+.versus:hover .versus-card::after {
+  opacity: 0.4;
+  animation: matchmakingLine 1.6s linear infinite;
+}
+@keyframes matchmakingLine {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* =========================================
+   MOVE CARD — HOVER MICRO ANIMATIONS
+   ========================================= */
+.move-card .move-icon path,
+.move-card .move-icon circle {
+  transition: transform 0.3s, stroke-width 0.3s;
+  transform-origin: center;
+}
+.move-card:hover .move-icon path {
+  animation: moveJitter 0.45s ease-out;
+}
+@keyframes moveJitter {
+  0%, 100% { transform: scale(1) rotate(0); }
+  30% { transform: scale(1.1) rotate(-4deg); }
+  60% { transform: scale(0.96) rotate(3deg); }
+}
+.move-card[data-color="yellow"]:hover .move-icon circle {
+  animation: ultRing 0.6s ease-out;
+}
+@keyframes ultRing {
+  0% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.25); }
+  100% { opacity: 1; transform: scale(1); }
+}
+.move-card::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 8px;
+  opacity: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at center, var(--card-glow, transparent), transparent 70%);
+  transition: opacity 0.3s;
+}
+.move-card[data-color="red"] { --card-glow: rgba(230, 57, 70, 0.25); }
+.move-card[data-color="cyan"] { --card-glow: rgba(93, 216, 232, 0.22); }
+.move-card[data-color="yellow"] { --card-glow: rgba(255, 214, 10, 0.28); }
+.move-card[data-color="green"] { --card-glow: rgba(122, 199, 79, 0.22); }
+.move-card[data-color="orange"] { --card-glow: rgba(255, 107, 53, 0.25); }
+.move-card[data-color="pink"] { --card-glow: rgba(255, 77, 141, 0.22); }
+.move-card[data-color="white"] { --card-glow: rgba(255, 246, 229, 0.15); }
+.move-card:hover::before { opacity: 1; }
+
+/* =========================================
+   HERO CAT — SOUND RING RIPPLE
+   ========================================= */
+.hero-cat-wrap::before,
+.hero-cat-wrap::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 60%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 3px solid var(--gold);
+  transform: translate(-50%, -50%) scale(0.6);
+  opacity: 0;
+  pointer-events: none;
+  animation: soundRipple 3.4s ease-out infinite;
+}
+.hero-cat-wrap::after {
+  animation-delay: 1.7s;
+  border-color: var(--amber);
+}
+@keyframes soundRipple {
+  0% { transform: translate(-50%, -50%) scale(0.55); opacity: 0; }
+  15% { opacity: 0.7; }
+  100% { transform: translate(-50%, -50%) scale(1.6); opacity: 0; }
+}
+
+/* =========================================
+   CATITUDE EASTER EGG
+   ========================================= */
+.catitude-egg {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 50;
+  background: rgba(13, 13, 13, 0.78);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1.5px solid var(--amber);
+  border-radius: 6px;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--amber);
+  letter-spacing: 2px;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s, transform 0.5s;
+}
+.catitude-egg.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.catitude-bar {
+  width: 80px;
+  height: 6px;
+  background: rgba(255, 246, 229, 0.15);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.catitude-fill {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, var(--amber), var(--gold));
+  transition: width 0.15s ease-out;
+}
+.catitude-egg.full {
+  border-color: var(--gold);
+  color: var(--gold);
+  animation: catitudeFull 0.6s ease-out;
+}
+@keyframes catitudeFull {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.12); filter: drop-shadow(0 0 12px var(--gold)); }
+  100% { transform: scale(1); }
+}
+@media (max-width: 640px) { .catitude-egg { display: none; } }
+
+/* =========================================
+   SCROLL REVEAL — gated by .js-ready (progressive enhancement)
+   Without JS, content is visible. With JS, fades in on scroll.
+   ========================================= */
+@media (prefers-reduced-motion: no-preference) {
+  .js-ready .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    will-change: opacity, transform;
+  }
+  .js-ready .reveal.in {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .js-ready .reveal-stagger > * {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  }
+  .js-ready .reveal-stagger.in > * { opacity: 1; transform: translateY(0); }
+  .js-ready .reveal-stagger.in > *:nth-child(1) { transition-delay: 0.05s; }
+  .js-ready .reveal-stagger.in > *:nth-child(2) { transition-delay: 0.12s; }
+  .js-ready .reveal-stagger.in > *:nth-child(3) { transition-delay: 0.19s; }
+  .js-ready .reveal-stagger.in > *:nth-child(4) { transition-delay: 0.26s; }
+  .js-ready .reveal-stagger.in > *:nth-child(5) { transition-delay: 0.33s; }
+  .js-ready .reveal-stagger.in > *:nth-child(6) { transition-delay: 0.40s; }
+  .js-ready .reveal-stagger.in > *:nth-child(7) { transition-delay: 0.47s; }
+  .js-ready .reveal-stagger.in > *:nth-child(8) { transition-delay: 0.54s; }
+}
+
+/* =========================================
+   REDUCED MOTION OVERRIDES
+   ========================================= */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001s !important;
+  }
+  .hero-cat-wrap::before, .hero-cat-wrap::after { display: none; }
+  .catitude-egg { display: none; }
+}
+
+/* =========================================
+   NAV REFLOW for nav-meta
+   ========================================= */
+nav { gap: 16px; }
+</style>
+</head>
+
+<body>
+
+<!-- ============== NAV ============== -->
+<nav>
+  <div class="nav-logo">MEOWDOWN</div>
+  <div class="nav-meta">An idea showcase · 2026</div>
+  <a href="#cta" class="nav-cta">Say hi →</a>
+</nav>
+
+<!-- ============== HERO ============== -->
+<section class="hero">
+  <div class="float-pop left" data-parallax="0.4">POW!</div>
+  <div class="float-pop right" data-parallax="-0.3">MEOW!</div>
+  <div class="float-pop btm" data-parallax="0.5">HISS</div>
+
+  <div class="hero-tag">UNDERGROUND ROOFTOP DUELS · BUILT IN THE OPEN</div>
+  <h1 class="wordmark">MEOWDOWN</h1>
+  <p class="tagline">The 1v1 voice fighter where <em>your meow</em> is the controller</p>
+  <p class="subtagline">Mobile · Steam · Cross-platform · Unity 6 · Pre-production</p>
+
+  <div class="hero-ctas">
+    <a href="#idea" class="btn-primary">See how it works ↓</a>
+    <a href="#cta" class="btn-secondary">Build with me</a>
+  </div>
+
+  <div class="hero-cat-wrap">
+    <svg class="hero-cat" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" aria-label="Yowling cat illustration">
+      <!-- Tail -->
+      <path d="M 295 285 Q 365 250 358 175 Q 355 155 345 145" fill="none" stroke="#0D0D0D" stroke-width="22" stroke-linecap="round"/>
+      <path d="M 295 285 Q 365 250 358 175 Q 355 155 345 145" fill="none" stroke="#FF8C42" stroke-width="14" stroke-linecap="round"/>
+
+      <!-- Body -->
+      <ellipse cx="200" cy="290" rx="105" ry="78" fill="#FF8C42" stroke="#0D0D0D" stroke-width="9"/>
+
+      <!-- Belly highlight -->
+      <ellipse cx="200" cy="310" rx="60" ry="30" fill="#FFC499" opacity="0.6"/>
+
+      <!-- Front leg -->
+      <ellipse cx="155" cy="345" rx="22" ry="32" fill="#FF8C42" stroke="#0D0D0D" stroke-width="7"/>
+      <ellipse cx="250" cy="345" rx="22" ry="32" fill="#FF8C42" stroke="#0D0D0D" stroke-width="7"/>
+
+      <!-- Head -->
+      <circle cx="200" cy="170" r="85" fill="#FF8C42" stroke="#0D0D0D" stroke-width="9"/>
+
+      <!-- Ear left -->
+      <path d="M 142 110 L 128 45 L 180 95 Z" fill="#FF8C42" stroke="#0D0D0D" stroke-width="7" stroke-linejoin="round"/>
+      <path d="M 148 100 L 140 65 L 170 95 Z" fill="#FF4D8D"/>
+      <!-- Ear right -->
+      <path d="M 258 110 L 272 45 L 220 95 Z" fill="#FF8C42" stroke="#0D0D0D" stroke-width="7" stroke-linejoin="round"/>
+      <path d="M 252 100 L 260 65 L 230 95 Z" fill="#FF4D8D"/>
+
+      <!-- Closed eyes (dramatic singing) -->
+      <path d="M 158 155 Q 173 168 188 155" fill="none" stroke="#0D0D0D" stroke-width="6" stroke-linecap="round"/>
+      <path d="M 212 155 Q 227 168 242 155" fill="none" stroke="#0D0D0D" stroke-width="6" stroke-linecap="round"/>
+
+      <!-- Eye sparkle/dramatic line above closed eyes -->
+      <line x1="165" y1="135" x2="175" y2="143" stroke="#0D0D0D" stroke-width="4" stroke-linecap="round"/>
+      <line x1="235" y1="135" x2="225" y2="143" stroke="#0D0D0D" stroke-width="4" stroke-linecap="round"/>
+
+      <!-- Nose -->
+      <path d="M 195 185 L 205 185 L 200 192 Z" fill="#FF4D8D" stroke="#0D0D0D" stroke-width="3" stroke-linejoin="round"/>
+
+      <!-- Yowling open mouth (animated) -->
+      <g class="cat-mouth-anim">
+        <ellipse cx="200" cy="220" rx="28" ry="35" fill="#0D0D0D"/>
+        <ellipse cx="200" cy="225" rx="20" ry="26" fill="#FF4D8D"/>
+        <!-- Teeth -->
+        <path d="M 185 200 L 188 215 L 191 200 Z" fill="#FFF6E5"/>
+        <path d="M 209 200 L 212 215 L 215 200 Z" fill="#FFF6E5"/>
+        <!-- Tongue -->
+        <ellipse cx="200" cy="240" rx="10" ry="8" fill="#E63946"/>
+      </g>
+
+      <!-- Whiskers left -->
+      <line x1="155" y1="195" x2="100" y2="185" stroke="#0D0D0D" stroke-width="3" stroke-linecap="round"/>
+      <line x1="155" y1="205" x2="95" y2="210" stroke="#0D0D0D" stroke-width="3" stroke-linecap="round"/>
+      <!-- Whiskers right -->
+      <line x1="245" y1="195" x2="300" y2="185" stroke="#0D0D0D" stroke-width="3" stroke-linecap="round"/>
+      <line x1="245" y1="205" x2="305" y2="210" stroke="#0D0D0D" stroke-width="3" stroke-linecap="round"/>
+
+      <!-- Sound waves from mouth -->
+      <path class="sound-wave" d="M 235 215 Q 260 220 250 245"/>
+      <path class="sound-wave" d="M 250 200 Q 285 215 275 250"/>
+      <path class="sound-wave" d="M 165 215 Q 140 220 150 245"/>
+    </svg>
+  </div>
+</section>
+
+<!-- ============== MARQUEE ============== -->
+<div class="marquee">
+  <div class="marquee-track">
+    <span>MEOW</span><span class="star">★</span>
+    <span>HISS</span><span class="star">★</span>
+    <span>POUNCE</span><span class="star">★</span>
+    <span>YOWL</span><span class="star">★</span>
+    <span>MEOW</span><span class="star">★</span>
+    <span>HISS</span><span class="star">★</span>
+    <span>POUNCE</span><span class="star">★</span>
+    <span>YOWL</span><span class="star">★</span>
+    <span>MEOW</span><span class="star">★</span>
+    <span>HISS</span><span class="star">★</span>
+    <span>POUNCE</span><span class="star">★</span>
+    <span>YOWL</span><span class="star">★</span>
+  </div>
+</div>
+<div class="marquee marquee-reverse">
+  <div class="marquee-track">
+    <span>VOICE-CONTROLLED</span><span class="star">●</span>
+    <span>MOBILE-FIRST</span><span class="star">●</span>
+    <span>30-SECOND DUELS</span><span class="star">●</span>
+    <span>BUILT FOR CLIPS</span><span class="star">●</span>
+    <span>VOICE-CONTROLLED</span><span class="star">●</span>
+    <span>MOBILE-FIRST</span><span class="star">●</span>
+    <span>30-SECOND DUELS</span><span class="star">●</span>
+    <span>BUILT FOR CLIPS</span><span class="star">●</span>
+  </div>
+</div>
+
+<!-- ============== IDEA ============== -->
+<section class="pitch" id="idea">
+  <div class="container">
+    <div class="section-tag">The Idea</div>
+    <h2 class="section-title">A real fighter. <em>An unreal input.</em></h2>
+
+    <p class="pitch-lede">
+      Meowdown is a 1v1 voice fighter built for <strong>mobile and Steam from day one</strong>. The mouth is the controller. The cat is the fighter. Eight moves, 30-second matches, ranked play — <strong>across platforms, in the same matchmaking pool</strong>. Phone fights PC. Belgrade fights Berlin. All in the same fight. This page is the open notebook on what it is, how it works, and where it's headed.
+    </p>
+
+    <div class="pillars">
+      <div class="pillar">
+        <div class="pillar-num">/ 01 /</div>
+        <div class="pillar-title">VOICE</div>
+        <p class="pillar-desc">No buttons. Meow, hiss, purr, and yowl are the only inputs. The mouth is the controller.</p>
+      </div>
+      <div class="pillar">
+        <div class="pillar-num">/ 02 /</div>
+        <div class="pillar-title">VIRAL</div>
+        <p class="pillar-desc">Every match produces an embarrassing clip. The viral loop is built into the input itself.</p>
+      </div>
+      <div class="pillar">
+        <div class="pillar-num">/ 03 /</div>
+        <div class="pillar-title">VERSUS</div>
+        <p class="pillar-desc">30-second matches, best of 3, ranked play across platforms. Real combat: parries, clashes, mind games.</p>
+      </div>
+      <div class="pillar">
+        <div class="pillar-num">/ 04 /</div>
+        <div class="pillar-title">EXPAND</div>
+        <p class="pillar-desc">Same engine ships roosters, geese, and frogs next year. Content roadmap built into the architecture.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== LOOP ============== -->
+<section class="loop">
+  <div class="container">
+    <div class="section-tag">The Loop</div>
+    <h2 class="section-title">Open. Meow. Share. <em>Repeat.</em></h2>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-title">Open</div>
+        <p class="step-desc">Tap a name, pick a cat, find an opponent in your city. 8 seconds from launch to fight.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-title">Meow</div>
+        <p class="step-desc">Make noise into your phone. Real noise. The kind you didn't know you could make in public.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-title">Share</div>
+        <p class="step-desc">Export the match clip as a 9:16 video. Reaction is automatic. Distribution is automatic.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <div class="step-title">Repeat</div>
+        <p class="step-desc">Match ends. Tap. Match starts. The loop is the product. Every yowl pulls you back in.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== MOVES ============== -->
+<section class="moves">
+  <div class="container">
+    <div class="section-tag">The Combat</div>
+    <h2 class="section-title">Eight moves. <em>One mouth.</em></h2>
+    <p class="moves-intro">A real fighting game underneath the comedy. Same-move clashes prevent spam. Parries reward skill. Yowls reward courage. Loudness alone never wins.</p>
+
+    <div class="moves-grid">
+      <div class="move-card" data-color="red">
+        <svg class="move-icon" viewBox="0 0 48 48"><path d="M8 8 L24 24 L8 40 M24 8 L40 24 L24 40" fill="none" stroke="#E63946" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div class="move-name">Claw Swipe</div>
+        <div class="move-input">SHORT MEOW</div>
+        <p class="move-desc">Fast jab. Low damage, low cost. Spam is punished.</p>
+      </div>
+
+      <div class="move-card" data-color="orange">
+        <svg class="move-icon" viewBox="0 0 48 48"><path d="M8 32 Q24 8 40 32" fill="none" stroke="#FF6B35" stroke-width="5" stroke-linecap="round"/><circle cx="40" cy="32" r="4" fill="#FF6B35"/></svg>
+        <div class="move-name">Pounce</div>
+        <div class="move-input">LONG MEOW</div>
+        <p class="move-desc">Heavy committed leap. Breaks guard. Punishable on whiff.</p>
+      </div>
+
+      <div class="move-card" data-color="cyan">
+        <svg class="move-icon" viewBox="0 0 48 48"><path d="M24 4 L8 14 L8 28 Q8 40 24 44 Q40 40 40 28 L40 14 Z" fill="none" stroke="#5DD8E8" stroke-width="4"/></svg>
+        <div class="move-name">Hiss Block</div>
+        <div class="move-input">LONG HISS</div>
+        <p class="move-desc">Sustained guard. Stops jabs. Broken by Pounce.</p>
+      </div>
+
+      <div class="move-card" data-color="yellow">
+        <svg class="move-icon" viewBox="0 0 48 48"><path d="M24 4 L18 22 L28 22 L20 44 L34 24 L24 24 Z" fill="#FFD60A" stroke="#FFD60A" stroke-width="2" stroke-linejoin="round"/></svg>
+        <div class="move-name">Sharp Parry</div>
+        <div class="move-input">SHARP HISS</div>
+        <p class="move-desc">Tight 250ms window. Counter-hit + stun. The skill ceiling.</p>
+      </div>
+
+      <div class="move-card" data-color="white">
+        <svg class="move-icon" viewBox="0 0 48 48"><circle cx="24" cy="24" r="14" fill="none" stroke="#FFF6E5" stroke-width="3" stroke-dasharray="4 4"/><path d="M14 24 L34 24" stroke="#FFF6E5" stroke-width="3" stroke-linecap="round"/></svg>
+        <div class="move-name">Silent Dodge</div>
+        <div class="move-input">SILENCE</div>
+        <p class="move-desc">No sound, no cost. Avoids everything. Reading required.</p>
+      </div>
+
+      <div class="move-card" data-color="green">
+        <svg class="move-icon" viewBox="0 0 48 48"><path d="M8 24 Q16 16 24 24 T40 24" fill="none" stroke="#7AC74F" stroke-width="4" stroke-linecap="round"/><path d="M8 32 Q16 24 24 32 T40 32" fill="none" stroke="#7AC74F" stroke-width="4" stroke-linecap="round" opacity="0.6"/></svg>
+        <div class="move-name">Purr Focus</div>
+        <div class="move-input">LOW HUM</div>
+        <p class="move-desc">Recover stamina, charge ultimate. Exposes you.</p>
+      </div>
+
+      <div class="move-card" data-color="pink">
+        <svg class="move-icon" viewBox="0 0 48 48"><path d="M8 12 L18 22 L8 32 M16 12 L26 22 L16 32 M24 12 L34 22 L24 32 M32 12 L42 22 L32 32" fill="none" stroke="#FF4D8D" stroke-width="3" stroke-linecap="round"/></svg>
+        <div class="move-name">Scratch Flurry</div>
+        <div class="move-input">RAPID MEOWS</div>
+        <p class="move-desc">Three quick hits. Breaks blocks. Caught by parry.</p>
+      </div>
+
+      <div class="move-card" data-color="yellow">
+        <svg class="move-icon" viewBox="0 0 48 48"><circle cx="24" cy="24" r="6" fill="#FFD60A"/><circle cx="24" cy="24" r="14" fill="none" stroke="#FFD60A" stroke-width="2.5"/><circle cx="24" cy="24" r="22" fill="none" stroke="#FFD60A" stroke-width="2"/></svg>
+        <div class="move-name">Ultimate Yowl</div>
+        <div class="move-input">FULL METER + LOUD</div>
+        <p class="move-desc">Unblockable. 3 damage. Only Silent Dodge counters it.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== VOICE VISUALIZER ============== -->
+<section class="voiceviz">
+  <div class="container">
+    <div class="section-tag">The Input</div>
+    <h2 class="section-title">What your mic sees. <em>What the cat does.</em></h2>
+    <p class="voiceviz-intro">No language model. No keyword spotting. The game listens for <strong>shapes of sound</strong> — short / long / sharp / silent / sustained — and maps them to moves. Here's the acoustic grammar.</p>
+
+    <div class="voiceviz-grid">
+      <div class="vviz-card">
+        <svg class="vviz-wave" viewBox="0 0 200 60" aria-hidden="true">
+          <path d="M0 30 L40 30 L46 12 L52 48 L58 30 L200 30" fill="none" stroke="#E63946" stroke-width="3" stroke-linecap="round"/>
+          <text x="100" y="56" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#E63946" opacity="0.6">~200ms · voiced</text>
+        </svg>
+        <div class="vviz-input">"meow!"</div>
+        <div class="vviz-arrow">→</div>
+        <div class="vviz-move" style="color: var(--red)">Claw Swipe</div>
+      </div>
+
+      <div class="vviz-card">
+        <svg class="vviz-wave" viewBox="0 0 200 60" aria-hidden="true">
+          <path d="M0 30 L30 30 Q60 4 90 30 Q120 56 150 30 L200 30" fill="none" stroke="#FF6B35" stroke-width="3" stroke-linecap="round"/>
+          <text x="100" y="56" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#FF6B35" opacity="0.6">~800ms · voiced</text>
+        </svg>
+        <div class="vviz-input">"meeeeow"</div>
+        <div class="vviz-arrow">→</div>
+        <div class="vviz-move" style="color: var(--orange)">Pounce</div>
+      </div>
+
+      <div class="vviz-card">
+        <svg class="vviz-wave" viewBox="0 0 200 60" aria-hidden="true">
+          <path d="M0 30 L20 30 L22 18 L24 42 L26 22 L28 40 L30 18 L32 44 L34 22 L36 40 L38 20 L40 42 L42 24 L44 38 L46 22 L48 42 L50 20 L52 40 L54 22 L56 42 L58 20 L60 40 L62 24 L64 38 L66 24 L68 40 L70 30 L200 30" fill="none" stroke="#5DD8E8" stroke-width="2.2" stroke-linecap="round"/>
+          <text x="100" y="56" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#5DD8E8" opacity="0.6">noisy · sustained</text>
+        </svg>
+        <div class="vviz-input">"hsssss"</div>
+        <div class="vviz-arrow">→</div>
+        <div class="vviz-move" style="color: var(--cyan)">Hiss Block</div>
+      </div>
+
+      <div class="vviz-card">
+        <svg class="vviz-wave" viewBox="0 0 200 60" aria-hidden="true">
+          <path d="M0 30 L80 30 L86 6 L92 54 L98 30 L200 30" fill="none" stroke="#FFD60A" stroke-width="3.4" stroke-linecap="round"/>
+          <text x="100" y="56" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#FFD60A" opacity="0.6">~120ms · sharp</text>
+        </svg>
+        <div class="vviz-input">"tss!"</div>
+        <div class="vviz-arrow">→</div>
+        <div class="vviz-move" style="color: var(--gold)">Sharp Parry</div>
+      </div>
+
+      <div class="vviz-card">
+        <svg class="vviz-wave" viewBox="0 0 200 60" aria-hidden="true">
+          <path d="M0 30 L30 30 Q40 26 50 30 Q60 34 70 30 Q80 26 90 30 Q100 34 110 30 Q120 26 130 30 Q140 34 150 30 L200 30" fill="none" stroke="#7AC74F" stroke-width="2.6" stroke-linecap="round"/>
+          <text x="100" y="56" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#7AC74F" opacity="0.6">low · stable</text>
+        </svg>
+        <div class="vviz-input">"mrrrrr"</div>
+        <div class="vviz-arrow">→</div>
+        <div class="vviz-move" style="color: var(--green)">Purr Focus</div>
+      </div>
+
+      <div class="vviz-card">
+        <svg class="vviz-wave" viewBox="0 0 200 60" aria-hidden="true">
+          <path d="M0 30 L200 30" fill="none" stroke="#FFF6E5" stroke-width="2" stroke-linecap="round" stroke-dasharray="4 6"/>
+          <text x="100" y="56" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#FFF6E5" opacity="0.5">below noise floor</text>
+        </svg>
+        <div class="vviz-input">— silence —</div>
+        <div class="vviz-arrow">→</div>
+        <div class="vviz-move" style="color: var(--cream)">Silent Dodge</div>
+      </div>
+
+      <div class="vviz-card vviz-ult">
+        <svg class="vviz-wave" viewBox="0 0 200 60" aria-hidden="true">
+          <path d="M0 30 L20 30 Q50 -10 80 30 Q110 -10 140 30 Q170 -10 200 30" fill="none" stroke="#FFD60A" stroke-width="4" stroke-linecap="round"/>
+          <text x="100" y="56" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#FFD60A" opacity="0.7">1.2s+ · max RMS</text>
+        </svg>
+        <div class="vviz-input">"MRAAAAOWW!"</div>
+        <div class="vviz-arrow">→</div>
+        <div class="vviz-move" style="color: var(--gold)">Ultimate Yowl</div>
+      </div>
+    </div>
+
+    <p class="voiceviz-note">The game classifies <em>intent</em> across six acoustic dimensions — short/long/voiced/unvoiced/loud/silent. You don't need to be a cat. You need to be a different cat each time.</p>
+  </div>
+</section>
+
+<!-- ============== CROSS-PLATFORM ============== -->
+<section class="market">
+  <div class="container">
+    <div class="section-tag">Cross-Platform</div>
+    <h2 class="section-title">One game. <em>Two platforms.</em> One pool.</h2>
+    <p class="market-intro">
+      Mobile and Steam from launch — <strong>same matchmaking, same leaderboards, same fight</strong>. A streamer's PC in Berlin matched against a phone in Belgrade in the next 8 seconds. The platform stops being a wall.
+    </p>
+
+    <div class="versus">
+      <div class="versus-card us">
+        <div class="versus-label">/ Mobile /</div>
+        <h3 class="versus-title">Phone</h3>
+        <ul class="versus-list">
+          <li>Free-to-play · cosmetic monetization</li>
+          <li>Built for TikTok / Reels clips</li>
+          <li>Touch UI · Quiet Mode for public play</li>
+          <li>Geo-leaderboards · city rivalries</li>
+          <li>Mass acquisition engine</li>
+        </ul>
+      </div>
+
+      <div class="versus-divider">⇄</div>
+
+      <div class="versus-card them">
+        <div class="versus-label">/ Steam /</div>
+        <h3 class="versus-title">PC</h3>
+        <ul class="versus-list">
+          <li>Premium release · streamer-first features</li>
+          <li>Pro voice calibration · USB mic support</li>
+          <li>Tournament mode · party room codes</li>
+          <li>Voice emotes · creator overlays</li>
+          <li>Twitch / YouTube content engine</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== EXPANSION ============== -->
+<section class="expansion">
+  <div class="container">
+    <div class="section-tag">The Roadmap</div>
+    <h2 class="section-title">Year 1: cats. <em>Year 2: the menagerie.</em></h2>
+    <p class="moves-intro">Same combat engine. Same 500ms windows. Same Catitude system. New animal, new fantasy, new seasonal marketing wave. A franchise, not a one-off.</p>
+
+    <div class="animals">
+      <div class="animal">
+        <span class="animal-badge">LIVE</span>
+        <span class="animal-emoji">🐱</span>
+        <div class="animal-name">Meowdown</div>
+        <div class="animal-year">2026 · Q3</div>
+      </div>
+      <div class="animal locked">
+        <span class="animal-emoji">🐕</span>
+        <div class="animal-name">Bark Brawl</div>
+        <div class="animal-year">2027 · Q1</div>
+      </div>
+      <div class="animal locked">
+        <span class="animal-emoji">🐓</span>
+        <div class="animal-name">Rooster Rumble</div>
+        <div class="animal-year">2027 · Q3</div>
+      </div>
+      <div class="animal locked">
+        <span class="animal-emoji">🦢</span>
+        <div class="animal-name">Honk Off!</div>
+        <div class="animal-year">2028 · Q1</div>
+      </div>
+      <div class="animal locked">
+        <span class="animal-emoji">🐸</span>
+        <div class="animal-name">Croak Clash</div>
+        <div class="animal-year">2028 · Q3</div>
+      </div>
+      <div class="animal locked">
+        <span class="animal-emoji">🐐</span>
+        <div class="animal-name">Goat Yell</div>
+        <div class="animal-year">2029 · Q1</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== NUMBERS ============== -->
+<section class="numbers">
+  <div class="container">
+    <div class="section-tag">The shape</div>
+    <h2 class="section-title">Small scope. <em>Strong shape.</em></h2>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-num" data-count-to="30" data-suffix="s">0s</div>
+        <div class="stat-label">Match length</div>
+        <p class="stat-desc">Built around "one more round." Same loop psychology as Stumble Guys, Among Us, Wordle.</p>
+      </div>
+      <div class="stat">
+        <div class="stat-num" data-count-to="12" data-suffix="wk">0wk</div>
+        <div class="stat-label">MVP sprint</div>
+        <p class="stat-desc">Android beta in 3 months. Unity 6 + Photon Fusion + Supabase. One builder, one window.</p>
+      </div>
+      <div class="stat">
+        <div class="stat-num" data-count-to="8" data-suffix="">0</div>
+        <div class="stat-label">Moves at launch</div>
+        <p class="stat-desc">Deep enough for ranked play. Shallow enough for a first-time player to land a hit.</p>
+      </div>
+      <div class="stat">
+        <div class="stat-num" data-count-to="0" data-suffix="%">0%</div>
+        <div class="stat-label">Pay-to-win</div>
+        <p class="stat-desc">Cosmetics only. No ads in MVP. Trust before anything else.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== ROSTER ============== -->
+<section class="roster">
+  <div class="container">
+    <div class="section-tag">The Roster</div>
+    <h2 class="section-title">Five cats. <em>Five silhouettes.</em></h2>
+    <p class="roster-intro">From the Art Bible: every cat needs a distinct silhouette at thumbnail size. Hover any cat to see who they are. Same combat. Different drama.</p>
+
+    <div class="roster-grid">
+      <!-- Alley Cat -->
+      <div class="roster-cat" data-color="orange">
+        <svg class="roster-silhouette" viewBox="0 0 200 200" aria-label="Alley Cat silhouette">
+          <ellipse cx="100" cy="138" rx="56" ry="44" fill="currentColor"/>
+          <circle cx="100" cy="78" r="42" fill="currentColor"/>
+          <path d="M70 48 L60 14 L92 42 Z" fill="currentColor"/>
+          <path d="M130 48 L140 14 L108 42 Z" fill="currentColor"/>
+          <path d="M150 130 Q200 100 175 60 Q170 50 162 56" fill="none" stroke="currentColor" stroke-width="14" stroke-linecap="round"/>
+          <ellipse cx="78" cy="180" rx="14" ry="18" fill="currentColor"/>
+          <ellipse cx="122" cy="180" rx="14" ry="18" fill="currentColor"/>
+        </svg>
+        <div class="roster-name">Alley Cat</div>
+        <div class="roster-vibe">The Default · Scrappy, streetwise, torn left ear, fish-bone necklace</div>
+      </div>
+
+      <!-- Royal Persian -->
+      <div class="roster-cat" data-color="cream">
+        <svg class="roster-silhouette" viewBox="0 0 200 200" aria-label="Royal Persian silhouette">
+          <ellipse cx="100" cy="145" rx="62" ry="42" fill="currentColor"/>
+          <circle cx="100" cy="82" r="58" fill="currentColor"/>
+          <path d="M64 38 L60 12 L86 36 Z" fill="currentColor"/>
+          <path d="M136 38 L140 12 L114 36 Z" fill="currentColor"/>
+          <path d="M55 70 Q44 60 38 70" fill="none" stroke="currentColor" stroke-width="10" stroke-linecap="round"/>
+          <path d="M55 90 Q42 92 38 100" fill="none" stroke="currentColor" stroke-width="10" stroke-linecap="round"/>
+          <path d="M55 110 Q44 116 40 124" fill="none" stroke="currentColor" stroke-width="10" stroke-linecap="round"/>
+          <path d="M145 70 Q156 60 162 70" fill="none" stroke="currentColor" stroke-width="10" stroke-linecap="round"/>
+          <path d="M145 90 Q158 92 162 100" fill="none" stroke="currentColor" stroke-width="10" stroke-linecap="round"/>
+          <path d="M145 110 Q156 116 160 124" fill="none" stroke="currentColor" stroke-width="10" stroke-linecap="round"/>
+          <path d="M150 145 Q190 130 170 95" fill="none" stroke="currentColor" stroke-width="20" stroke-linecap="round"/>
+        </svg>
+        <div class="roster-name">Royal Persian</div>
+        <div class="roster-vibe">The Aristocrat · Indignant, regal, gives "you've offended me" energy</div>
+      </div>
+
+      <!-- Sphynx -->
+      <div class="roster-cat" data-color="pink">
+        <svg class="roster-silhouette" viewBox="0 0 200 200" aria-label="Sphynx silhouette">
+          <ellipse cx="100" cy="140" rx="44" ry="38" fill="currentColor"/>
+          <ellipse cx="100" cy="80" rx="36" ry="40" fill="currentColor"/>
+          <path d="M60 38 L48 0 L92 36 Z" fill="currentColor"/>
+          <path d="M140 38 L152 0 L108 36 Z" fill="currentColor"/>
+          <path d="M138 130 Q200 90 170 30" fill="none" stroke="currentColor" stroke-width="9" stroke-linecap="round"/>
+          <ellipse cx="80" cy="178" rx="10" ry="14" fill="currentColor"/>
+          <ellipse cx="120" cy="178" rx="10" ry="14" fill="currentColor"/>
+        </svg>
+        <div class="roster-name">Sphynx</div>
+        <div class="roster-vibe">The Goblin · Alien, gremlin-coded, slightly unsettling, all angles</div>
+      </div>
+
+      <!-- Black Cat -->
+      <div class="roster-cat" data-color="ink">
+        <svg class="roster-silhouette" viewBox="0 0 200 200" aria-label="Black Cat silhouette">
+          <ellipse cx="100" cy="138" rx="50" ry="42" fill="currentColor"/>
+          <circle cx="100" cy="78" r="40" fill="currentColor"/>
+          <path d="M70 46 L62 14 L92 40 Z" fill="currentColor"/>
+          <path d="M130 46 L138 14 L108 40 Z" fill="currentColor"/>
+          <path d="M148 125 Q190 110 180 70 Q176 58 168 60" fill="none" stroke="currentColor" stroke-width="10" stroke-linecap="round"/>
+          <ellipse cx="78" cy="180" rx="12" ry="16" fill="currentColor"/>
+          <ellipse cx="122" cy="180" rx="12" ry="16" fill="currentColor"/>
+          <ellipse cx="86" cy="74" rx="4" ry="6" fill="#FFD60A"/>
+          <ellipse cx="114" cy="74" rx="4" ry="6" fill="#FFD60A"/>
+        </svg>
+        <div class="roster-name">Black Cat</div>
+        <div class="roster-vibe">The Witch · Cursed, theatrical, knows something you don't</div>
+      </div>
+
+      <!-- Maine Coon -->
+      <div class="roster-cat" data-color="cinnamon">
+        <svg class="roster-silhouette" viewBox="0 0 200 200" aria-label="Maine Coon silhouette">
+          <ellipse cx="100" cy="142" rx="68" ry="46" fill="currentColor"/>
+          <circle cx="100" cy="80" r="48" fill="currentColor"/>
+          <path d="M62 36 L46 0 L92 38 Z" fill="currentColor"/>
+          <path d="M138 36 L154 0 L108 38 Z" fill="currentColor"/>
+          <path d="M50 14 L42 4 L52 26 Z" fill="currentColor"/>
+          <path d="M150 14 L158 4 L148 26 Z" fill="currentColor"/>
+          <path d="M52 100 Q30 116 40 140" fill="none" stroke="currentColor" stroke-width="14" stroke-linecap="round"/>
+          <path d="M148 100 Q170 116 160 140" fill="none" stroke="currentColor" stroke-width="14" stroke-linecap="round"/>
+          <path d="M160 135 Q200 110 190 60" fill="none" stroke="currentColor" stroke-width="16" stroke-linecap="round"/>
+          <ellipse cx="74" cy="184" rx="16" ry="14" fill="currentColor"/>
+          <ellipse cx="126" cy="184" rx="16" ry="14" fill="currentColor"/>
+        </svg>
+        <div class="roster-name">Maine Coon</div>
+        <div class="roster-vibe">The Mountain · Viking energy, lumbering, ear tufts, massive ruff</div>
+      </div>
+    </div>
+
+    <p class="roster-foot">More breeds in the post-launch backlog. Each breed is cosmetic-only — no stat differences worth winning matches over. <em>Cats are equal. Players aren't.</em></p>
+  </div>
+</section>
+
+<!-- ============== STILL FIGURING OUT ============== -->
+<section class="figuring">
+  <div class="container">
+    <div class="section-tag">In the air</div>
+    <h2 class="section-title">Things I'm still <em>figuring out.</em></h2>
+    <p class="figuring-intro">The page wouldn't be honest without these. If any of them sparks something, that's exactly the kind of email I'm hoping for.</p>
+
+    <div class="figuring-grid">
+      <div class="fig-card">
+        <div class="fig-tag">/ 01 / Tone</div>
+        <p class="fig-q">Cult of the Lamb dark-comedy, or Cuphead chaotic-cute? Both work. Both pull different audiences.</p>
+      </div>
+      <div class="fig-card">
+        <div class="fig-tag">/ 02 / Music</div>
+        <p class="fig-q">Cat Noir Lounge jazz is the brief. AI-generated for MVP? Commissioned composer post-launch? Open to applicants.</p>
+      </div>
+      <div class="fig-card">
+        <div class="fig-tag">/ 03 / Mascot</div>
+        <p class="fig-q">One hero cat across all marketing, or a rotating breed-of-the-month? The first builds franchise. The second builds variety.</p>
+      </div>
+      <div class="fig-card">
+        <div class="fig-tag">/ 04 / Announcer</div>
+        <p class="fig-q">Snarky British documentarian, decided. But — recorded human voice actor, ElevenLabs AI, or a cat-voiced narrator? I genuinely don't know.</p>
+      </div>
+      <div class="fig-card">
+        <div class="fig-tag">/ 05 / Name</div>
+        <p class="fig-q">"Meowdown" feels right but the trademark check is pending. Backup names on the shelf: <em>Catstrophe, Yowl, Hiss &amp; Co., Furrocious, Alley Royale.</em></p>
+      </div>
+      <div class="fig-card">
+        <div class="fig-tag">/ 06 / Soft-launch market</div>
+        <p class="fig-q">Belgrade first feels right for the city-leaderboard hook. But does it work as well in Berlin? Mexico City? Manila? TBD.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== BUILDER ============== -->
+<section class="builder">
+  <div class="container">
+    <div class="section-tag">The Builder</div>
+    <h2 class="section-title">Solo. <em>AI-assisted.</em> Built in the open.</h2>
+
+    <div class="builder-grid">
+      <div class="builder-text">
+        <p>
+          Meowdown is being built by <strong>Stefan / Triardor DOO</strong> in Belgrade — designer and founder behind ZOPMAX (Spektrum Control), Tappy, ČasPosla, and Vineforge. Advanced Unreal background, full-stack design discipline, multi-product shipping history.
+        </p>
+        <p>
+          Code runs through <strong>Claude Code</strong> with structured per-week briefs. Art runs through AI generation (Midjourney + SDXL) against a locked Art Bible. The whole production model is one builder + AI tools shipping at studio quality, on purpose.
+        </p>
+        <p>
+          <strong>Doors are open for:</strong> investor conversations, co-founder talks, animator collaboration, composer commissions, streamer/creator partnerships for soft-launch — or just a friendly hello.
+        </p>
+      </div>
+
+      <div class="builder-stack">
+        <div class="builder-stack-title">/ Production Stack /</div>
+        <ul class="stack-list">
+          <li><span>Platforms</span><span>iOS · Android · Steam</span></li>
+          <li><span>Engine</span><span>Unity 6 LTS</span></li>
+          <li><span>Multiplayer</span><span>Photon Fusion 2</span></li>
+          <li><span>Backend</span><span>Supabase</span></li>
+          <li><span>Audio ML</span><span>Unity Sentis</span></li>
+          <li><span>Analytics</span><span>Firebase</span></li>
+          <li><span>Code</span><span>Claude Code</span></li>
+          <li><span>Art</span><span>Midjourney / SDXL</span></li>
+          <li><span>Voice</span><span>ElevenLabs</span></li>
+          <li><span>Music</span><span>Suno / Custom</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== CTA ============== -->
+<section class="cta-section" id="cta">
+  <div class="container">
+    <div class="section-tag" style="color: var(--cream); justify-content: center;">
+      <span style="background: var(--cream); width: 28px; height: 2px;"></span>
+      Drop in
+    </div>
+    <h2 class="section-title">Say <em>hi.</em></h2>
+    <p class="cta-blurb">Curious. Want to build it with me. Want to invest. Want to send a clip when it works. Want to write about voice-controlled cat fights. All welcome. Email is the door. Nothing to download yet — you just read the whole thing.</p>
+
+    <div class="cta-buttons">
+      <a href="mailto:stefan@triardor.com?subject=Meowdown%20—%20Collaboration&body=Hi%20Stefan%2C%0A%0AI%27d%20love%20to%20help%20build%20Meowdown%20as%20a%3A%0A%0A☐%20Animator%20%2F%20artist%0A☐%20Composer%20%2F%20sound%20designer%0A☐%20Unity%20engineer%0A☐%20Playtester%20%2F%20beta%20tester%0A☐%20Streamer%20%2F%20content%20creator%0A%0AHere%27s%20what%20caught%20my%20eye%3A%0A%0A" class="btn-primary">Build with me →</a>
+      <a href="mailto:stefan@triardor.com?subject=Meowdown%20—%20Investor%20Inquiry&body=Hi%20Stefan%2C%0A%0AI%27d%20like%20to%20learn%20more%20about%20Meowdown.%0A%0AFund%20%2F%20angel%3A%20%0AStage%20interest%3A%20%0AHow%20I%20found%20the%20project%3A%20%0A%0A" class="btn-secondary">Talk investment →</a>
+      <a href="mailto:stefan@triardor.com?subject=Meowdown%20—%20Just%20Saying%20Hi&body=Hi%20Stefan%2C%0A%0A" class="btn-tertiary">Just say hi</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============== FOOTER ============== -->
+<footer>
+  <div class="footer-logo">MEOWDOWN</div>
+  <div class="footer-info">
+    A <a href="https://triardor.com" target="_blank" rel="noopener">Triardor DOO</a> idea · Belgrade, Serbia<br>
+    PIB 114771478 · MB 22068083 · © 2026<br>
+    Built in the open with Claude Code · Powered by cats
+  </div>
+</footer>
+
+<!-- ============== CATITUDE EASTER EGG ============== -->
+<div class="catitude-egg" aria-hidden="true">
+  <div class="catitude-label">CATITUDE</div>
+  <div class="catitude-bar"><div class="catitude-fill"></div></div>
+</div>
+
+<script>
+(() => {
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* Mark JS as ready so reveal opacity:0 rules engage (progressive enhancement) */
+  document.documentElement.classList.add('js-ready');
+
+  /* ---------- Scroll reveal ---------- */
+  const revealSelectors = [
+    'section .container > *',
+    '.pillars', '.steps', '.moves-grid', '.voiceviz-grid',
+    '.versus', '.animals', '.stats', '.roster-grid', '.figuring-grid',
+    '.builder-grid'
+  ];
+  document.querySelectorAll('section .container').forEach(c => c.classList.add('reveal'));
+  document.querySelectorAll('.pillars, .steps, .moves-grid, .voiceviz-grid, .animals, .stats, .roster-grid, .figuring-grid')
+    .forEach(g => g.classList.add('reveal-stagger'));
+
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+
+  document.querySelectorAll('.reveal, .reveal-stagger').forEach(el => io.observe(el));
+
+  /* ---------- Count-up numbers ---------- */
+  const counters = document.querySelectorAll('[data-count-to]');
+  const counterIO = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const el = e.target;
+      const target = parseInt(el.dataset.countTo, 10);
+      const suffix = el.dataset.suffix || '';
+      const dur = 1100;
+      const start = performance.now();
+      if (reducedMotion) { el.textContent = target + suffix; counterIO.unobserve(el); return; }
+      const tick = (now) => {
+        const t = Math.min(1, (now - start) / dur);
+        const eased = 1 - Math.pow(1 - t, 3);
+        el.textContent = Math.round(target * eased) + suffix;
+        if (t < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+      counterIO.unobserve(el);
+    });
+  }, { threshold: 0.6 });
+  counters.forEach(c => counterIO.observe(c));
+
+  /* ---------- Hero parallax ---------- */
+  if (!reducedMotion) {
+    const hero = document.querySelector('.hero');
+    const pops = document.querySelectorAll('.float-pop');
+    const cat = document.querySelector('.hero-cat-wrap');
+    let raf = 0, mx = 0, my = 0;
+
+    hero.addEventListener('mousemove', (ev) => {
+      const r = hero.getBoundingClientRect();
+      mx = (ev.clientX - r.left) / r.width - 0.5;
+      my = (ev.clientY - r.top) / r.height - 0.5;
+      if (!raf) raf = requestAnimationFrame(applyParallax);
+    });
+    hero.addEventListener('mouseleave', () => {
+      mx = 0; my = 0;
+      if (!raf) raf = requestAnimationFrame(applyParallax);
+    });
+
+    const applyParallax = () => {
+      pops.forEach(p => {
+        const depth = parseFloat(p.dataset.parallax || '0.3');
+        const r = p.style.getPropertyValue('--r') || '0deg';
+        p.style.transform = `translate(${mx * 30 * depth}px, ${my * 30 * depth}px) rotate(${r})`;
+      });
+      if (cat) cat.style.transform = `translate(${mx * 12}px, ${my * 8}px)`;
+      raf = 0;
+    };
+  }
+
+  /* ---------- Catitude easter egg ---------- */
+  const egg = document.querySelector('.catitude-egg');
+  const fill = document.querySelector('.catitude-fill');
+  let confettied = false;
+
+  const updateCatitude = () => {
+    const doc = document.documentElement;
+    const scrolled = (doc.scrollTop || document.body.scrollTop);
+    const maxScroll = (doc.scrollHeight - doc.clientHeight);
+    const pct = Math.min(100, Math.max(0, (scrolled / maxScroll) * 100));
+    if (fill) fill.style.width = pct + '%';
+    if (pct > 5 && !egg.classList.contains('visible')) egg.classList.add('visible');
+    if (pct >= 99 && !confettied) {
+      confettied = true;
+      egg.classList.add('full');
+      spawnPops();
+    }
+  };
+  window.addEventListener('scroll', updateCatitude, { passive: true });
+  updateCatitude();
+
+  /* ---------- Confetti pops on full Catitude ---------- */
+  const spawnPops = () => {
+    if (reducedMotion) return;
+    const words = ['POW!', 'MEOW!', 'HISS', 'YOWL!', 'PURR', 'BAM!', 'NYA!'];
+    const colors = ['#FFB627', '#E63946', '#5DD8E8', '#FFD60A', '#FF4D8D', '#7AC74F', '#FF6B35'];
+    for (let i = 0; i < 14; i++) {
+      const p = document.createElement('div');
+      p.textContent = words[i % words.length];
+      p.style.cssText = `
+        position: fixed;
+        left: ${50 + (Math.random() - 0.5) * 80}vw;
+        top: ${50 + (Math.random() - 0.5) * 60}vh;
+        font-family: 'Honk', sans-serif;
+        font-size: ${36 + Math.random() * 36}px;
+        color: ${colors[i % colors.length]};
+        text-shadow: 3px 3px 0 #0D0D0D;
+        transform: rotate(${(Math.random() - 0.5) * 40}deg) scale(0);
+        z-index: 200;
+        pointer-events: none;
+        transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.9s ease-out 0.4s;
+      `;
+      document.body.appendChild(p);
+      requestAnimationFrame(() => {
+        p.style.transform = `rotate(${(Math.random() - 0.5) * 40}deg) translateY(-${100 + Math.random() * 120}px) scale(1)`;
+        p.style.opacity = '0';
+      });
+      setTimeout(() => p.remove(), 1500);
+    }
+  };
+
+  /* ---------- Marquee pause on hover (kindness for readers) ---------- */
+  document.querySelectorAll('.marquee').forEach(m => {
+    m.addEventListener('mouseenter', () => {
+      m.querySelector('.marquee-track').style.animationPlayState = 'paused';
+    });
+    m.addEventListener('mouseleave', () => {
+      m.querySelector('.marquee-track').style.animationPlayState = 'running';
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
